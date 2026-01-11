@@ -12,12 +12,20 @@ export default {
       },
       colors: {
         silverados: {
-          dark: '#0f172a',
-          accent: '#eab308', // Yellow/Gold
-          secondary: '#334155',
-          text: '#f8fafc'
+          dark: '#020617',
+          accent: '#FACC15',
+          secondary: '#1E293B',
         }
-      }
+      },
+      animation: {
+        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+      },
+      keyframes: {
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
     },
   },
   plugins: [],

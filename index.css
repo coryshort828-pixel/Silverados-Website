@@ -2,22 +2,93 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background-color: #0f172a;
-  color: #f8fafc;
+@layer base {
+  body {
+    @apply bg-[#050505] text-slate-100 antialiased selection:bg-red-600 selection:text-white;
+    overflow-x: hidden;
+  }
+  
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight uppercase;
+  }
 }
 
-/* Custom scrollbar */
+@layer components {
+  .font-rock {
+    font-family: 'Bebas Neue', cursive;
+  }
+
+  .text-glow-red {
+    text-shadow: 0 0 15px rgba(229, 62, 62, 0.7), 0 0 30px rgba(229, 62, 62, 0.4);
+  }
+
+  .text-glow-orange {
+    text-shadow: 0 0 15px rgba(237, 137, 54, 0.6);
+  }
+
+  .grunge-overlay {
+    background-image: url("https://www.transparenttextures.com/patterns/black-linen.png");
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  .ticket-edge {
+    background-color: #111;
+    position: relative;
+  }
+
+  .ticket-edge::before {
+    content: "";
+    @apply absolute top-1/2 -left-[10px] w-5 h-5 bg-[#050505] rounded-full -translate-y-1/2;
+  }
+
+  .ticket-edge::after {
+    content: "";
+    @apply absolute top-1/2 -right-[10px] w-5 h-5 bg-[#050505] rounded-full -translate-y-1/2;
+  }
+
+  .eq-bar {
+    @apply bg-red-600 w-1 rounded-t-sm;
+    animation: eq-bounce 0.8s ease-in-out infinite alternate;
+  }
+
+  .stage-smoke {
+    background: radial-gradient(circle at 50% 50%, rgba(229, 62, 62, 0.05), transparent 70%);
+  }
+}
+
+@keyframes eq-bounce {
+  0% { height: 4px; }
+  100% { height: 16px; }
+}
+
+@keyframes vinyl-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-vinyl {
+  animation: vinyl-spin 6s linear infinite;
+}
+
+@keyframes string-vibrate {
+  0%, 100% { transform: translateY(0); opacity: 0.3; }
+  50% { transform: translateY(1px); opacity: 0.8; }
+}
+
+.animate-vibrate {
+  animation: string-vibrate 0.12s linear infinite;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: #050505;
 }
 ::-webkit-scrollbar-thumb {
-  background: #475569;
-  border-radius: 4px;
+  background: #E53E3E;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: #ED8936;
 }

@@ -1,118 +1,114 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Bot } from 'lucide-react';
+import { Mic2, X, Send, Bot, Sparkles, AlertCircle } from 'lucide-react';
 import { chatWithConcierge } from '../services/geminiService';
 import { ChatMessage, MessageRole } from '../types';
 
 const Concierge: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: MessageRole.MODEL, text: "Hi! I'm the Silverados Virtual Concierge. Ask me about our hours, the dog park, or our live music!" }
+    { role: MessageRole.MODEL, text: "YO! Checking in from the Silverados booth. What can I tell ya about the lineup or our pool setup?" }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, isOpen]);
+    if (isOpen) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, isOpen, isLoading]);
 
   const handleSend = async () => {
     if (!inputValue.trim() || isLoading) return;
-
     const userText = inputValue.trim();
     setInputValue('');
-    
-    // Add user message
     setMessages(prev => [...prev, { role: MessageRole.USER, text: userText }]);
     setIsLoading(true);
 
-    // Call Gemini
-    const responseText = await chatWithConcierge(userText);
-
-    // Add model response
-    setMessages(prev => [...prev, { role: MessageRole.MODEL, text: responseText }]);
-    setIsLoading(false);
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleSend();
+    try {
+      const responseText = await chatWithConcierge(userText);
+      setMessages(prev => [...prev, { role: MessageRole.MODEL, text: responseText }]);
+    } catch (err) {
+      setMessages(prev => [...prev, { 
+        role: MessageRole.MODEL, 
+        text: "Signal's dropped! We might be jamming too loud. Try again in a sec.",
+        isError: true 
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <>
-      {/* Floating Button */}
+    <div className="fixed bottom-8 right-8 z-[110]">
+      {/* Dynamic Microphone Toggle */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-40 bg-yellow-500 hover:bg-yellow-400 text-slate-900 p-4 rounded-full shadow-lg shadow-black/50 transition-transform hover:scale-110 flex items-center justify-center"
-        aria-label="Open Virtual Concierge"
+        className={`group relative w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 transform active:scale-95 ${isOpen ? 'bg-white text-black' : 'bg-red-600 text-white'}`}
       >
-        {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
+        <div className={`absolute inset-0 rounded-full bg-red-600 blur-lg opacity-40 animate-pulse ${isOpen ? 'hidden' : 'block'}`}></div>
+        {isOpen ? <X className="w-7 h-7" /> : <Mic2 className="w-7 h-7 relative z-10" />}
       </button>
 
-      {/* Chat Window */}
+      {/* Rock-Themed Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-80 md:w-96 h-96 bg-slate-800 rounded-xl shadow-2xl border border-slate-700 flex flex-col z-40 overflow-hidden animate-fade-in-up">
-          {/* Header */}
-          <div className="bg-slate-900 p-4 border-b border-slate-700 flex items-center gap-2">
-            <Bot className="w-5 h-5 text-yellow-500" />
-            <h3 className="font-bold text-white">Silverados Assistant</h3>
+        <div className="absolute bottom-20 right-0 w-[340px] md:w-[400px] h-[550px] flex flex-col bg-[#111] border border-white/10 rounded-2xl shadow-[0_30px_100px_rgba(0,0,0,0.8)] overflow-hidden animate-fade-in-up">
+          <div className="bg-red-600 p-6 flex items-center gap-4">
+            <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
+               <Mic2 className="text-red-600 w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="font-rock text-2xl text-white tracking-widest leading-none">SILVERADOS TECH</h3>
+              <p className="text-[10px] font-bold text-black uppercase tracking-widest">Online / Stage Right</p>
+            </div>
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-800">
+          <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
             {messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`flex ${msg.role === MessageRole.USER ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[85%] rounded-lg px-4 py-2 text-sm ${
-                    msg.role === MessageRole.USER
-                      ? 'bg-yellow-500 text-slate-900 rounded-br-none'
-                      : 'bg-slate-700 text-gray-200 rounded-bl-none'
-                  }`}
-                >
+              <div key={idx} className={`flex ${msg.role === MessageRole.USER ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-[85%] p-4 rounded-xl text-sm leading-relaxed ${
+                  msg.role === MessageRole.USER 
+                    ? 'bg-red-600 text-white font-bold' 
+                    : 'bg-zinc-800 text-slate-300 border border-white/5'
+                }`}>
                   {msg.text}
                 </div>
               </div>
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-slate-700 rounded-lg rounded-bl-none px-4 py-2 flex gap-1">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-75"></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150"></div>
+                <div className="bg-zinc-800 p-4 rounded-xl flex gap-2">
+                   <div className="eq-bar h-4"></div>
+                   <div className="eq-bar h-4 [animation-delay:0.2s]"></div>
+                   <div className="eq-bar h-4 [animation-delay:0.4s]"></div>
                 </div>
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input */}
-          <div className="p-3 bg-slate-900 border-t border-slate-700 flex gap-2">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyPress}
-              placeholder="Ask a question..."
-              className="flex-1 bg-slate-800 text-white border border-slate-700 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-yellow-500"
-            />
-            <button
-              onClick={handleSend}
-              disabled={isLoading}
-              className="bg-yellow-500 text-slate-900 p-2 rounded-md hover:bg-yellow-400 disabled:opacity-50"
-            >
-              <Send className="w-4 h-4" />
-            </button>
+          <div className="p-4 bg-black/50 border-t border-white/5">
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                placeholder="Talk to us..."
+                className="flex-1 bg-zinc-900 text-white border border-white/10 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-600 transition-all font-medium"
+              />
+              <button
+                onClick={handleSend}
+                disabled={isLoading}
+                className="p-3 bg-red-600 text-white rounded-lg hover:bg-white hover:text-black transition-all"
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

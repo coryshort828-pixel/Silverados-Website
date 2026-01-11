@@ -1,77 +1,86 @@
 import React from 'react';
 import { MOCK_EVENTS } from '../constants';
-import { Calendar, Clock, MapPin } from 'lucide-react';
+import { MoveRight, Ticket, Flame } from 'lucide-react';
 
 const Events: React.FC = () => {
   return (
-    <section id="events" className="py-20 bg-slate-950">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-slate-800 pb-4">
+    <section id="lineup" className="py-32 bg-black relative">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex flex-col md:flex-row items-end justify-between mb-24 text-center md:text-left gap-8">
           <div>
-            <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-2">EVENT CALENDAR</h2>
-            <p className="text-gray-400">Live music, pool tournaments, and specials.</p>
+            <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
+              <Flame className="text-red-600 w-6 h-6 animate-pulse" />
+              <span className="text-red-600 font-rock text-2xl tracking-[0.2em]">NOW TRENDING</span>
+            </div>
+            <h2 className="text-7xl md:text-9xl font-rock text-white tracking-tighter leading-none">
+              STAGE <span className="text-red-600 text-glow-red">SCHEDULE</span>
+            </h2>
           </div>
-          <a href="https://facebook.com/silveradoswnc" target="_blank" rel="noreferrer" className="hidden md:inline-flex items-center text-yellow-500 hover:text-white transition-colors mt-4 md:mt-0">
-            View full calendar on Facebook &rarr;
-          </a>
+          <p className="text-slate-500 font-rock text-2xl tracking-widest uppercase border-l-2 border-red-600 pl-6 hidden md:block">
+            No Backing Tracks.<br/>Pure Mountain Grunt.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {MOCK_EVENTS.map((event) => (
-            <div key={event.id} className="group flex flex-col bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-xl hover:border-yellow-500/50 transition-all duration-300 hover:-translate-y-1">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          {MOCK_EVENTS.map((event, idx) => (
+            <div 
+              key={event.id}
+              className={`group flex flex-col sm:flex-row bg-[#111] overflow-hidden hover:shadow-[0_0_60px_rgba(229,62,62,0.1)] transition-all duration-500 border border-white/5 relative ${idx === 0 ? 'lg:col-span-2' : ''}`}
+            >
+              {/* Ticket Perforation Line */}
+              <div className="absolute left-[35%] top-0 bottom-0 w-[1px] border-l border-dashed border-white/10 hidden sm:block z-20"></div>
               
-              {/* Thumbnail Image Container */}
-              <div className="relative h-48 sm:h-56 overflow-hidden">
+              <div className={`w-full overflow-hidden relative ${idx === 0 ? 'sm:w-[45%] h-80 sm:h-auto' : 'sm:w-[35%] h-64 sm:h-auto'}`}>
                 <img 
                   src={event.image} 
                   alt={event.title} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-110" 
                 />
-                
-                {/* Overlay Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80"></div>
-                
-                {/* Time Badge */}
-                <div className="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-sm border border-slate-700 text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                  <Clock className="w-3 h-3 text-yellow-500" />
-                  {event.time}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
+                <div className="absolute top-6 left-6 bg-red-600 text-white font-rock px-4 py-1 text-2xl tracking-widest shadow-xl">
+                  {event.date}
                 </div>
               </div>
 
-              {/* Content */}
-              <div className="flex-1 p-6 relative">
-                {/* Floating Date Badge */}
-                <div className="absolute -top-10 left-6 bg-yellow-500 text-slate-900 rounded-lg p-2.5 shadow-lg text-center min-w-[4rem] group-hover:bg-yellow-400 transition-colors">
-                  <span className="block text-xs font-bold uppercase tracking-wider opacity-90">{event.day.substring(0, 3)}</span>
-                  <span className="block text-2xl font-display font-bold leading-none mt-0.5">{event.date.split(' ')[1]}</span>
-                </div>
-
-                <div className="mt-4">
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-yellow-500 transition-colors leading-tight">
+              <div className="flex-1 p-8 sm:p-12 flex flex-col justify-between ticket-edge z-10">
+                <div>
+                  <div className="flex flex-wrap items-center gap-3 mb-6">
+                    <span className="px-3 py-1 bg-white/5 border border-red-600/30 text-red-600 font-rock text-sm tracking-widest uppercase rounded">
+                      {event.genre}
+                    </span>
+                    <span className="text-slate-500 font-rock text-sm tracking-widest uppercase">DOORS @ {event.time}</span>
+                  </div>
+                  <h3 className={`${idx === 0 ? 'text-5xl md:text-7xl' : 'text-4xl'} font-rock text-white mb-6 group-hover:text-red-600 transition-colors leading-none tracking-wide`}>
                     {event.title}
                   </h3>
-                  <p className="text-slate-400 text-sm mb-6 line-clamp-3">
-                    {event.description}
-                  </p>
-                  
-                  <div className="mt-auto border-t border-slate-800 pt-4 flex justify-between items-center">
-                     <span className="text-xs text-slate-500 font-medium uppercase tracking-wider flex items-center gap-1">
-                        <MapPin className="w-3 h-3" /> Indoor Stage
-                     </span>
-                     <button className="text-yellow-500 text-sm font-bold uppercase tracking-wider hover:text-white transition-colors flex items-center gap-1">
-                       Details <Calendar className="w-4 h-4" />
-                     </button>
-                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between mt-8">
+                  <button className="flex items-center gap-3 bg-red-600 text-white px-8 py-4 font-rock text-2xl tracking-wider hover:bg-white hover:text-black transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-red-600/20">
+                    <Ticket className="w-6 h-6" />
+                    GET PASS
+                  </button>
+                  <button className="text-slate-600 hover:text-red-600 transition-colors group">
+                     <MoveRight className="w-10 h-10 transform group-hover:translate-x-2 transition-transform" />
+                  </button>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-12 text-center md:hidden">
-           <a href="https://facebook.com/silveradoswnc" target="_blank" rel="noreferrer" className="inline-block px-6 py-3 border border-slate-700 rounded-full text-yellow-500 font-medium hover:bg-slate-800 transition-colors">
-            View full calendar on Facebook &rarr;
-          </a>
+        <div className="mt-32 p-16 border border-white/5 bg-zinc-900/30 backdrop-blur-sm text-center relative overflow-hidden group">
+           <div className="absolute inset-0 stage-smoke opacity-20"></div>
+           <p className="font-rock text-4xl text-white mb-8 tracking-widest relative z-10">READY TO ROCK THE STAGE?</p>
+           <a 
+             href="mailto:silveradosinfo@gmail.com" 
+             className="relative z-10 inline-block px-12 py-5 bg-white text-black font-rock text-3xl hover:bg-red-600 hover:text-white transition-all duration-300 transform group-hover:-rotate-1"
+           >
+             SUBMIT YOUR DEMO
+           </a>
+           <div className="absolute -bottom-10 -right-10 opacity-5 transform rotate-12 group-hover:scale-110 transition-transform">
+              <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400" alt="Gear" className="w-64" />
+           </div>
         </div>
       </div>
     </section>

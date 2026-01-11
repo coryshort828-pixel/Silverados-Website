@@ -1,20 +1,36 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🎸 Silverados WNC - Deployment Guide
 
-# Run and deploy your AI Studio app
+This website is a high-performance React application. Because it uses the **Gemini AI API**, it cannot be hosted as a simple "static" site (like a basic GoDaddy upload). It needs a service that handles "Build Processes."
 
-This contains everything you need to run your app locally.
+## 🚀 How to see these changes at silveradoswnc.com
 
-View your app in AI Studio: https://ai.studio/apps/drive/1dHVQX769ka4GAslOd16V06p-Oa6gh7m9
+### Step 1: Update your GitHub Repository
+1. Open your repository on GitHub.
+2. Replace the existing files with the code provided in this project.
+3. **Important**: Ensure `package.json`, `vite.config.ts`, and the `src` files are all present.
 
-## Run Locally
+### Step 2: Connect to Netlify (Free & Recommended)
+Since you already have a GitHub repo, this is the easiest way:
+1. Go to [Netlify.com](https://www.netlify.com) and sign in with GitHub.
+2. Click **"Add new site"** > **"Import an existing project"**.
+3. Select your Silverados GitHub repository.
+4. **Site Settings**:
+   - Build Command: `npm run build`
+   - Publish Directory: `dist`
+5. **Environment Variables (CRITICAL)**:
+   - Go to **Site Settings > Environment variables**.
+   - Add a variable named `API_KEY`.
+   - Paste your Google Gemini API Key here.
 
-**Prerequisites:**  Node.js
+### Step 3: Point GoDaddy to the new site
+1. In Netlify, go to **Domain Settings**.
+2. Click **"Add custom domain"** and enter `silveradoswnc.com`.
+3. Netlify will give you 4 "Nameservers" (e.g., `dns1.p01.nsone.net`).
+4. Log into your **GoDaddy Control Panel**.
+5. Find your domain > **Manage DNS** > **Nameservers**.
+6. Change them to the ones Netlify gave you.
 
+**Note**: Once you update GoDaddy, it can take anywhere from 1 to 24 hours for the new site to show up for everyone (this is called DNS Propagation).
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+---
+*Created for Silverados WNC - Black Mountain, NC*
