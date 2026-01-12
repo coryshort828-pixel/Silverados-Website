@@ -47,7 +47,7 @@ export const MOCK_EVENTS = [
     day: 'SATURDAY',
     time: '9:00 PM',
     genre: 'SOUTHERN ROCK',
-    image: 'https://images.unsplash.com/photo-1521334885634-9547aa693471?w=800&q=80',
+    image: '/images/blackwater-station-logo.png',
     social: 'https://www.facebook.com/p/Blackwater-Station-Band-61565956504352/'
   },
   {

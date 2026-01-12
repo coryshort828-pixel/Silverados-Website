@@ -39,5 +39,26 @@ Every time you push your code to GitHub now, Google Firebase will automatically:
 2. Inject your `API_KEY`.
 3. Deploy the new design to `silveradoswnc.com`.
 
+## 🖼️ Adding Band Logos (Blackwater Station, etc.)
+To ensure the Blackwater Station logo appears correctly, your folder structure should look like this in your code editor:
+
+```text
+project-root/
+├── public/
+│   └── images/
+│       └── blackwater-station-logo.png  <-- Put your image file here!
+├── components/
+├── index.html
+├── constants.tsx
+└── ...
+```
+
+**How to add the logo:**
+1. Create a new folder named `public` at the very top level of your project.
+2. Inside `public`, create a folder named `images`.
+3. Drag and drop your band logo file into that `images` folder.
+4. Rename the file to `blackwater-station-logo.png` exactly.
+5. Push these changes to GitHub, and Firebase will automatically update the site with the new image.
+
 ---
 *Note: DNS changes at GoDaddy can take up to 24 hours to "propagate" across the internet.*
